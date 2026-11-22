@@ -14,13 +14,13 @@ const PersonalInformationView = ({ user }: any) => {
 				<div className='w-[50%] border border-[#fff] border-b-[#E5E7EB] '>
 					<div className='w-full flex flex-col pb-[10px]'>
 						<p className='font-normal text-[14px] leading-[150%] text-[#6D7280]'>Employee</p>
-						<h1 className='font-medium text-[14px] leading-[150%] text-[#3A4050]'>{name}</h1>
+						<h1 className='font-medium text-[14px] leading-[150%] text-[#344249]'>{name}</h1>
 					</div>
 				</div>
 				<div className='w-[50%] border border-[#fff] border-b-[#E5E7EB] '>
 					<div className='w-full flex flex-col pb-[10px]'>
 						<p className='font-normal text-[14px] leading-[150%] text-[#6D7280]'>Role</p>
-						<h1 className='font-medium text-[14px] leading-[150%] text-[#3A4050]'>{role}</h1>
+						<h1 className='font-medium text-[14px] leading-[150%] text-[#344249]'>{role}</h1>
 					</div>
 				</div>
 			</div>
@@ -28,13 +28,13 @@ const PersonalInformationView = ({ user }: any) => {
 				<div className='w-[50%] border border-[#fff] border-b-[#E5E7EB] '>
 					<div className='w-full flex flex-col pb-[10px]'>
 						<p className='font-normal text-[14px] leading-[150%] text-[#6D7280]'>Email</p>
-						<h1 className='font-medium text-[14px] leading-[150%] text-[#3A4050]'>{email}</h1>
+						<h1 className='font-medium text-[14px] leading-[150%] text-[#344249]'>{email}</h1>
 					</div>
 				</div>
 				<div className='w-[50%] border border-[#fff] border-b-[#E5E7EB] '>
 					<div className='w-full flex flex-col pb-[10px]'>
 						<p className='font-normal text-[14px] leading-[150%] text-[#6D7280]'>Phone</p>
-						<h1 className='font-medium text-[14px] leading-[150%] text-[#3A4050]'>{phone}</h1>
+						<h1 className='font-medium text-[14px] leading-[150%] text-[#344249]'>{phone}</h1>
 					</div>
 				</div>
 			</div>
@@ -42,13 +42,13 @@ const PersonalInformationView = ({ user }: any) => {
 				<div className='w-[50%] border border-[#fff] border-b-[#E5E7EB] '>
 					<div className='w-full flex flex-col pb-[10px]'>
 						<p className='font-normal text-[14px] leading-[150%] text-[#6D7280]'>Gender</p>
-						<h1 className='font-medium text-[14px] leading-[150%] text-[#3A4050]'>{gender}</h1>
+						<h1 className='font-medium text-[14px] leading-[150%] text-[#344249]'>{gender}</h1>
 					</div>
 				</div>
 				<div className='w-[50%] border border-[#fff] border-b-[#E5E7EB] '>
 					<div className='w-full flex flex-col pb-[10px]'>
 						<p className='font-normal text-[14px] leading-[150%] text-[#6D7280]'>Status</p>
-						<h1 className='font-medium text-[14px] leading-[150%] text-[#3A4050]'>
+						<h1 className='font-medium text-[14px] leading-[150%] text-[#344249]'>
 							{status === 'active' ? 'Active' : status === 'inactive' ? 'Inactive' : status}
 						</h1>
 					</div>

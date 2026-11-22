@@ -5,6 +5,7 @@ import { store } from '@/utils/APISlice/store';
 import { Provider } from 'react-redux';
 import { Toaster } from 'sonner';
 import NetworkStatusHandler from '@/components/NetworkStatusHandler';
+import AttendanceSocketNotifications from '@/components/AttendanceSocketNotifications';
 import { AuthProvider } from './AuthProvider';
 
 interface NewProviderProps {
@@ -24,9 +25,10 @@ const NewProvider: React.FC<NewProviderProps> = ({ children }) => {
 				}}
 			/>
 			<NetworkStatusHandler />
+			<AttendanceSocketNotifications />
 			<ProgressProvider
 				height="4px"
-				color="#2563EB"
+				color="#36474F"
 				options={{ showSpinner: false }}
 				shallowRouting>
 				<Provider store={store}>

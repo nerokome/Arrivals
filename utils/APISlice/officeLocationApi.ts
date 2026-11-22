@@ -1,12 +1,28 @@
 import { baseApi } from './baseApi';
 
+export interface OfficeLocationPayload {
+  name: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+  radius: number;
+}
+
 export const officeLocationApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    getOfficeLocationById: builder.query<any, string>({
+      query: (officeId) => `/api/v1/office-location/${encodeURIComponent(officeId)}`,
+      providesTags: ["OfficeLocation"],
+    }),
+    getAgentOfficeShifts: builder.query<any, string>({
+      query: (officeId) => `/api/v1/office-location/${encodeURIComponent(officeId)}/shifts`,
+      providesTags: ["Shift"],
+    }),
     getOfficeLocations: builder.query<any, void>({
       query: () => '/office-location',
       providesTags: ['OfficeLocation'],
     }),
-    addOfficeLocation: builder.mutation<any, { name: string; address: string }>({
+    addOfficeLocation: builder.mutation<any, { name: string; address: string; latitude?: number; longitude?: number; radius?: number }>({
       query: (body) => ({
         url: '/office-location',
         method: 'POST',
@@ -61,6 +77,8 @@ export const officeLocationApi = baseApi.injectEndpoints({
 });
 
 export const {
+  useGetOfficeLocationByIdQuery,
+  useGetAgentOfficeShiftsQuery,
   useGetOfficeLocationsQuery,
   useAddOfficeLocationMutation,
   useUpdateOfficeLocationMutation,

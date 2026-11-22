@@ -66,7 +66,7 @@ const AttendanceList = () => {
 									'Early': 'bg-[#ECFDF3] border-[#ABEFC6] text-[#067647]',
 									'Late': 'bg-[#FEF3F2] border-[#FECDCA] text-[#B42318]',
 									'Absent': 'bg-[#FFFAF0] border-[#FEDF89] text-[#B54708]',
-									'On Leave': 'bg-[#F0F9FF] border-[#B9E6FE] text-[#026AA2]',
+									'On Leave': 'bg-[#F0F9FF] border-[#DCE4E6] text-[#026AA2]',
 									'Unknown': 'bg-[#FEF2F2] border-[#FCA5A5] text-[#B91C1C]',
 									'N/A': 'bg-gray-100 text-gray-600'
 								}[status] || 'bg-gray-100 text-gray-600';

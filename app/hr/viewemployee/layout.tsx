@@ -4,6 +4,7 @@ import Footer from "@/components/Bottom";
 import Header from "@/components/Header";
 import SideNav from "@/components/SideNav";
 import React from "react";
+import AdminRoleGuard from "@/components/AdminRoleGuard";
 
 
 
@@ -15,7 +16,7 @@ function Layout({ children }: { children: React.ReactNode }) {
       <Header />
       <SideNav />
       <Footer />
-      <main>{children}</main>
+      <main><AdminRoleGuard>{children}</AdminRoleGuard></main>
     </div>
   );
 }

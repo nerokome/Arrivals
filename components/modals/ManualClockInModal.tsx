@@ -42,8 +42,8 @@ const ManualClockInModal: React.FC<ManualClockInModalProps> = ({
 
 	return (
 		<div className="fixed inset-0 z-50 flex items-center justify-center bg-[#00000051] bg-opacity-50   ">
-			<div className="w-full max-w-md   !bg-[#fff] border border-blue-300  shadow-2xl p-8 transform transition-all duration-300 scale-100 rounded-none">
-				<h2 className="text-3xl font-bold text-center !text-blue-800 mb-2">
+			<div className="w-full max-w-md   !bg-[#fff] border border-[#B7C5C9]  shadow-2xl p-8 transform transition-all duration-300 scale-100 rounded-none">
+				<h2 className="text-3xl font-bold text-center !text-[#202A2F] mb-2">
 					Confirm Manual {isCheckIn ? 'Clock-In' : 'Clock-Out'}
 				</h2>
 				<p className="text-center text-gray-700 text-sm mb-6">
@@ -69,7 +69,7 @@ const ManualClockInModal: React.FC<ManualClockInModalProps> = ({
 						onClick={onConfirm}
 						className="px-6 py-3   !bg-green-500 !hover:bg-green-600 text-white font-semibold transition shadow-md w-full sm:w-auto rounded-none cursor-pointer"
 					>
-						{isLoadingAttendance ? <SVGLoader width={"30px"} height={"30px"} color={"#0866FF"} /> : (isCheckIn ? "Clock In" : "Clock Out")}
+						{isLoadingAttendance ? <SVGLoader width={"30px"} height={"30px"} color={"#36474F"} /> : (isCheckIn ? "Clock In" : "Clock Out")}
 
 					</button>
 				</div>

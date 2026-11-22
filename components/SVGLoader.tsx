@@ -6,7 +6,7 @@ interface SVGLoaderProps {
   color?: string;
 }
 
-export const SVGLoader: React.FC<SVGLoaderProps> = ({ width, height, color = "#2563EB" }) => {
+export const SVGLoader: React.FC<SVGLoaderProps> = ({ width, height, color = "#36474F" }) => {
   return (
     <svg
       version="1.1"

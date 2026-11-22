@@ -10,7 +10,7 @@ const SVGLoaderFetch = ({ colSpan, text }: any) => (
   <tr>
     <td colSpan={colSpan} className="h-[300px] p-0 m-auto">
       <div className="center-content flex flex-col justify-center items-center h-full">
-        <SVGLoader width={"40px"} height={"40px"} color={"#0866FF"} />
+        <SVGLoader width={"40px"} height={"40px"} color={"#36474F"} />
         <p className="mt-3">{text}</p>
       </div>
     </td>

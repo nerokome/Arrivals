@@ -9,6 +9,8 @@ import { SVGLoader } from "@/components/SVGLoader";
 import LeaveModal from "@/components/modals/LeaveModal";
 
 import { useGetLeaveRequestsQuery } from "@/utils/APISlice/leaveApi";
+import { useUserPrivileges } from "@/utils/userPrivileges";
+import AgentLeaveRequests from "./AgentLeaveRequests";
 
 const LIMIT = 10;
 
@@ -17,6 +19,8 @@ type ModalState = {
 } | null;
 
 export default function LeaveRequests() {
+  const { user } = useUserPrivileges();
+  const isAgent = user?.role?.toUpperCase() === "AGENT";
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [modalState, setModalState] = useState<ModalState>(null);
@@ -25,7 +29,10 @@ export default function LeaveRequests() {
     page,
     limit: LIMIT,
     search,
-  });
+  }, { skip: !user || isAgent });
+
+  if (isAgent) return <AgentLeaveRequests />;
+  if (!user) return null;
 
   const paginated = data?.data?.data;
   const leaves = paginated?.data ?? [];

@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import AddEmployeeModal from '@/components/modals/AddEmployeeModal';
 import ManualClockInModal from '@/components/modals/ManualClockInModal';
 import UploadUsersModal from '@/components/modals/UploadUsersModal';
+import ResetDeviceModal from '@/components/modals/ResetDeviceModal';
 import { toast } from 'sonner';
 import { getErrorMessage } from '@/utils/getErrorMessage';
 import RealPagination from '@/components/RealPagination';
@@ -33,7 +34,8 @@ import CustomDropdownOffice from '@/components/CustomDropdownOffice';
 import { useUserPrivileges } from '@/utils/userPrivileges';
 
 const EmployeeDashBoard = () => {
-	const { user, isSuperAdmin } = useUserPrivileges();
+	const { user, isSuperAdmin, isAdmin } = useUserPrivileges();
+	const canFilterOffice = isSuperAdmin || isAdmin;
 	const [selectedOfficeId, setSelectedOfficeId] = useState("");
 	const [currentPage, setCurrentPage] = useState(1);
 	const [limit, setLimit] = useState(10);
@@ -61,7 +63,7 @@ const EmployeeDashBoard = () => {
 		startDate,
 		endDate,
 		search: debouncedSearchQuery,
-		officeId: isSuperAdmin ? selectedOfficeId : (user?.officeId || "")
+		officeId: canFilterOffice ? selectedOfficeId : (user?.officeId || "")
 	});
 	const { data: attendanceData } = useGetAttendanceQuery();
 	const [addAttendanceManual, { isLoading: isLoadingAttendance, isSuccess: successAttendance, error: errorAttendance }] = useAddAttendanceManualMutation();
@@ -72,6 +74,7 @@ const EmployeeDashBoard = () => {
 	const [dropFilter, setDropFilter] = useState(false);
 	const [isOpen, setIsOpen] = useState(false);
 	const [isUploadOpen, setIsUploadOpen] = useState(false);
+	const [isResetDeviceOpen, setIsResetDeviceOpen] = useState(false);
 	const [input, setInput] = useState({
 		token: '',
 		userId: '',
@@ -187,7 +190,7 @@ const EmployeeDashBoard = () => {
 						onChange={(e) => setSearchQuery(e.target.value)}
 						placeholder="Search employees..."
 					/>
-					{isSuperAdmin && (
+					{canFilterOffice && (
 						<div className="w-full md:w-[200px]">
 							<CustomDropdownOffice
 								label="All Locations"
@@ -204,20 +207,26 @@ const EmployeeDashBoard = () => {
 				</div>
 				<div className='flex flex-col md:flex-row gap-5 relative'>
 					<button
+						onClick={() => setIsResetDeviceOpen(true)}
+						className="cursor-pointer flex flex-col md:flex-row justify-center items-center gap-2 px-4 h-[40px] border border-[#36474F] !bg-white hover:!bg-gray-50 font-normal text-[14px] leading-[150%] text-[#36474F] rounded-none transition"
+					>
+						Reset Device
+					</button>
+					<button
 						onClick={() => setIsUploadOpen(true)}
-						className="cursor-pointer flex flex-col md:flex-row justify-center items-center gap-2 px-4 h-[40px] border border-[#2563EB] !bg-white hover:!bg-gray-50 font-normal text-[14px] leading-[150%] text-[#2563EB] rounded-none transition"
+						className="cursor-pointer flex flex-col md:flex-row justify-center items-center gap-2 px-4 h-[40px] border border-[#36474F] !bg-white hover:!bg-gray-50 font-normal text-[14px] leading-[150%] text-[#36474F] rounded-none transition"
 					>
 						Bulk Upload
 					</button>
 					<button
 						onClick={() => setIsOpen(true)}
-						className="cursor-pointer flex flex-col md:flex-row justify-center items-center gap-2 md:w-[150px] h-[40px] !bg-[#2563EB] font-normal text-[14px] leading-[150%] text-[#FFFFFF] rounded-none"
+						className="cursor-pointer flex flex-col md:flex-row justify-center items-center gap-2 md:w-[150px] h-[40px] !bg-[#36474F] font-normal text-[14px] leading-[150%] text-[#FFFFFF] rounded-none"
 					>
 						Add Employee
 					</button>
 					<button
 						onClick={() => setDropFilter(!dropFilter)}
-						className="flex flex-row justify-center items-center px-5 py-[8px] gap-2 bg-white border border-[#E5E7EB] font-medium text-[12px] leading-[150%] text-[#3A4050] rounded-none cursor-pointer"
+						className="flex flex-row justify-center items-center px-5 py-[8px] gap-2 bg-white border border-[#E5E7EB] font-medium text-[12px] leading-[150%] text-[#344249] rounded-none cursor-pointer"
 					>
 						<Image src={require("../../../public/icon/Filter_alt.svg")} alt="filter" />
 						Filter
@@ -277,8 +286,8 @@ const EmployeeDashBoard = () => {
 										'On Time': 'bg-[#ECFDF3] border-[#ABEFC6] text-[#067647]',
 										Late: 'bg-[#FEF3F2] border-[#FECDCA] text-[#B42318]',
 										Absent: 'bg-[#FFFAF0] border-[#FEDF89] text-[#B54708]',
-										'On Leave': 'bg-[#F0F9FF] border-[#B9E6FE] text-[#026AA2]',
-										'Clocked Out': 'bg-[#F9FAFB] border-[#E5E7EB] text-[#3A4050]',
+										'On Leave': 'bg-[#F0F9FF] border-[#DCE4E6] text-[#026AA2]',
+										'Clocked Out': 'bg-[#F9FAFB] border-[#E5E7EB] text-[#344249]',
 										Unknown: 'bg-[#FEF2F2] border-[#FCA5A5] text-[#B91C1C]',
 									}[status] || 'bg-gray-100 text-gray-600';
 
@@ -287,7 +296,7 @@ const EmployeeDashBoard = () => {
 											<td data-title="Clock">
 												<button
 													onClick={() => handleClockInClick(user)}
-													className="cursor-pointer flex flex-row justify-center items-center px-[6px] py-[4px] w-[70px] h-[22px] border font-medium text-[12px] leading-[18px] bg-[#EFF6FF] border-[#93C5FD] text-[#1D4ED8] hover:bg-[#DBEAFE] transition"
+													className="cursor-pointer flex flex-row justify-center items-center px-[6px] py-[4px] w-[70px] h-[22px] border font-medium text-[12px] leading-[18px] bg-[#EDF2F3] border-[#93C5FD] text-[#36474F] hover:bg-[#DBEAFE] transition"
 													title={clockLabel}
 												>
 													<span className="mr-1">{clockLabel}</span>
@@ -305,7 +314,7 @@ const EmployeeDashBoard = () => {
 														user?.isActive === 'active'
 															? 'bg-[#ECFDF3] border-[#ABEFC6] text-[#067647]'
 															: user?.isActive === 'resigned'
-															? 'bg-[#EFF6FF] border-[#BFDBFE] text-[#1D4ED8]'
+															? 'bg-[#EDF2F3] border-[#CAD5D8] text-[#36474F]'
 															: 'bg-[#FEF2F2] border-[#FCA5A5] text-[#B91C1C]'
 													}`}
 												>
@@ -369,6 +378,7 @@ const EmployeeDashBoard = () => {
 
 			<AddEmployeeModal isOpen={isOpen} setIsOpen={setIsOpen} />
 			<UploadUsersModal isOpen={isUploadOpen} setIsOpen={setIsUploadOpen} />
+			<ResetDeviceModal isOpen={isResetDeviceOpen} setIsOpen={setIsResetDeviceOpen} />
 		</div>
 	);
 };

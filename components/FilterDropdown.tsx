@@ -56,7 +56,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
 
 				<button
 					onClick={onApply}
-					className="w-full !bg-blue-600 text-white py-2 text-sm font-medium hover:bg-blue-700 rounded-none"
+					className="w-full !bg-[#36474F] text-white py-2 text-sm font-medium hover:bg-[#263238] rounded-none"
 				>
 					Filters
 				</button>

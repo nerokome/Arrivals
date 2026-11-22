@@ -4,13 +4,12 @@ import React, { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { FiMail, FiLock } from "react-icons/fi";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 import { useUserPrivileges } from "@/utils/userPrivileges";
 import { SVGLoader } from "@/components/SVGLoader";
 import { toast } from "sonner";
 import Link from "next/link";
 import { useAuth } from "@/app/utils/AuthProvider";
-import type { AuthUser } from "@/utils/auth";
+import { getStoredOrganization, type AuthUser } from "@/utils/auth";
 
 
 
@@ -30,40 +29,50 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/users/login`,
-        { email, password }
-      );
-      const { user, token } = response.data?.data ?? {};
+      const configuredBase = (process.env.NEXT_PUBLIC_BASE_URL ?? "").replace(/\/+$/, "");
+      const apiBase = configuredBase.endsWith("/api/v1") ? configuredBase : `${configuredBase}/api/v1`;
+      const response = await fetch(`${apiBase}/users/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const responseData = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(responseData?.message || "Invalid email or password");
+      }
+      let { user, token } = responseData?.data ?? {};
 
       if (!user || !token) {
-        throw new Error(response.data?.message || "Invalid email or password");
+        throw new Error(responseData?.message || "Invalid email or password");
       }
-      if (user.role?.toUpperCase() === "AGENT") {
-        throw new Error(
-          "Access Denied: Agents are not allowed to log in to the web application."
-        );
+      const currentUserResponse = await fetch(`${apiBase}/users/current-user`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (currentUserResponse.ok) {
+        const currentUserPayload = await currentUserResponse.json().catch(() => ({}));
+        const currentUserData = currentUserPayload?.data ?? {};
+        const currentUser = currentUserData?.user ?? currentUserPayload?.user ?? currentUserData;
+        user = { ...user, ...currentUserData, ...currentUser };
       }
-
       const authenticatedUser: AuthUser = {
         id: user.id,
         email: user.email,
         token,
         role: user.role,
         phone: user.phone ?? "",
-        fullName: `${user.name ?? ""}`,
+        gender: user.gender ?? "",
+        fullName: `${user.name ?? user.fullName ?? ""}`,
         officeId: user.officeId ?? "",
+        organizationId: user.organizationId ?? "",
+        profilePictureUrl: user.profilePictureUrl ?? null,
+        organization:
+          user.organization ?? responseData?.data?.organization ?? getStoredOrganization(user.id) ?? undefined,
       };
       signIn(authenticatedUser);
       toast.success("Login successful!");
       router.push('/dashboard');
     } catch (error: unknown) {
-      const message = axios.isAxiosError(error)
-        ? error.response?.data?.message || error.message
-        : error instanceof Error
-          ? error.message
-          : "Unable to log in. Please try again.";
-      toast.error(message);
+      toast.error(error instanceof Error ? error.message : "Unable to log in. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -73,7 +82,7 @@ const Login = () => {
     if (isSuperAdmin || isAdmin) {
       router.push('/dashboard');
     } else if (isAgent) {
-      router.push('/profile');
+      router.push('/dashboard');
     }
   }, [isSuperAdmin, isAdmin, isAgent]);
 
@@ -84,17 +93,8 @@ const Login = () => {
       <div className='img_licence-containers_login'>
         <div className="w-full flex">
           <div className="flex items-center gap-2 font-semibold text-gray-900 ">
-            <div className="bg-[#2563EB] p-2 rounded-lg">
-              <svg
-                className="w-6 h-6 text-white"
-                fill="currentColor"
-                viewBox="0 0 24 24" >
-                <path d="M19 3h-1V1h-2v2H8V1H6v2H5a2 2 0 0 0-2 2v14a2 
-        2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2Zm0 
-        16H5V10h14Zm0-11H5V5h14Z" />
-              </svg>
-            </div>
-            <span className="text-xl tracking-tight">Attendly</span>
+            <img src="/punchly-icon.svg" alt="" className="h-10 w-10 rounded-lg" />
+            <span className="text-xl tracking-tight">Punchly</span>
           </div>
         </div>
       </div>
@@ -137,12 +137,18 @@ const Login = () => {
             {loading ? <SVGLoader width={"20px"} height={"20px"} color={"#FFF"} /> : "Login"}
           </button>
         </form>
+        <p className="mt-5 text-center text-sm text-gray-600">
+          New to Punchly?{" "}
+          <Link href="/signup" className="font-semibold text-[#36474F] hover:underline">
+            Create an organization
+          </Link>
+        </p>
       </div>
       <div className="forgot_your_pass cursor-pointer"></div>
       <div className="absolute bottom-4 right-4 z-10">
         <Link
           href="/privacy"
-          className="text-xs text-gray-500 hover:text-[#2563EB] hover:underline transition-colors duration-200"
+          className="text-xs text-gray-500 hover:text-[#36474F] hover:underline transition-colors duration-200"
         >
           Privacy Policy
         </Link>

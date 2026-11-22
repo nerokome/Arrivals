@@ -13,9 +13,13 @@ import CustomDropdownOffice from '@/components/CustomDropdownOffice';
 import { useUserPrivileges } from '@/utils/userPrivileges';
 import moment from "moment";
 import { getAttendanceStatus } from '@/utils/timeUtils';
+import AgentAttendance from '@/components/AgentAttendance';
+import { LIVE_ATTENDANCE_EVENT, LIVE_ATTENDANCE_STORAGE_KEY } from '@/components/AttendanceSocketNotifications';
 
 const Attendance = () => {
-	const { user, isSuperAdmin } = useUserPrivileges();
+	const { user, isSuperAdmin, isAdmin } = useUserPrivileges();
+	const isAgent = user?.role?.toUpperCase() === "AGENT";
+	const canFilterOffice = isSuperAdmin || isAdmin;
 	const [selectedOfficeId, setSelectedOfficeId] = useState("");
 	const endDates = new Date();
 	const [startDate, setStartDate] = useState("");
@@ -28,6 +32,31 @@ const Attendance = () => {
 	const [result, setResult] = useState("");
 	const [searchQuery, setSearchQuery] = useState("");
 	const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
+ const [liveAttendance, setLiveAttendance] = useState<Record<string, { isPaused: boolean; outsideDurationMs?: number }>>({});
+
+ useEffect(() => {
+ 	try {
+ 		setLiveAttendance(JSON.parse(window.localStorage.getItem(LIVE_ATTENDANCE_STORAGE_KEY) ?? "{}"));
+ 	} catch {
+ 		setLiveAttendance({});
+ 	}
+
+ 	const handleLiveAttendance = (event: Event) => {
+ 		const detail = (event as CustomEvent<{ type: string; payload: any }>).detail;
+ 		const agentId = detail?.payload?.userId ?? detail?.payload?.agentId;
+ 		if (!agentId) return;
+ 		setLiveAttendance((current) => ({
+ 			...current,
+ 			[agentId]: {
+ 				isPaused: detail.type !== "agent-returned-to-office-radius",
+ 				outsideDurationMs: detail?.payload?.outsideDurationMs ?? current[agentId]?.outsideDurationMs,
+ 			},
+ 		}));
+ 	};
+
+ 	window.addEventListener(LIVE_ATTENDANCE_EVENT, handleLiveAttendance);
+ 	return () => window.removeEventListener(LIVE_ATTENDANCE_EVENT, handleLiveAttendance);
+ }, []);
 
 	useEffect(() => {
 		const timer = setTimeout(() => {
@@ -41,7 +70,7 @@ const Attendance = () => {
 	}, [debouncedSearchQuery]);
 
 	// RTK Query hook
-	const { data: officeData, isLoading: isLoadingOffice } = useGetOfficeLocationsQuery();
+	const { data: officeData, isLoading: isLoadingOffice } = useGetOfficeLocationsQuery(undefined, { skip: !user || isAgent });
 	const { data: attendanceData, isLoading: loadingAttendanceParams } = useGetAttendanceParamsQuery({
 		page: currentPage,
 		limit,
@@ -49,8 +78,11 @@ const Attendance = () => {
 		startDate,
 		endDate,
 		search: debouncedSearchQuery,
-		officeId: isSuperAdmin ? selectedOfficeId : (user?.officeId || "")
-	});
+		officeId: canFilterOffice ? selectedOfficeId : (user?.officeId || "")
+	}, { skip: !user || isAgent });
+
+	if (isAgent) return <AgentAttendance />;
+	if (!user) return null;
 
 	const locationOptions = officeData?.data?.data || officeData?.data || officeData || [];
 
@@ -153,7 +185,7 @@ const Attendance = () => {
 						onChange={(e) => setSearchQuery(e.target.value)}
 						placeholder="Search employees..."
 					/>
-					{isSuperAdmin && (
+					{canFilterOffice && (
 						<div className="w-full md:w-[200px]">
 							<CustomDropdownOffice
 								label="All Locations"
@@ -170,12 +202,12 @@ const Attendance = () => {
 				</div>
 
 				<div className='flex flex-col md:flex-row gap-5 relative'>
-					<button className="flex flex-row justify-center items-center px-5 py-[8px] gap-2 !bg-[#2563EB]  font-normal text-[14px] leading-[150%] text-[#FFFFFF] rounded-none">
+					<button className="flex flex-row justify-center items-center px-5 py-[8px] gap-2 !bg-[#36474F]  font-normal text-[14px] leading-[150%] text-[#FFFFFF] rounded-none">
 						Export
 					</button>
 					<button
 						onClick={() => setDropFilter(!dropFilter)}
-						className="flex flex-row justify-center items-center px-5 py-[8px] gap-2 bg-white border border-[#E5E7EB] font-medium text-[12px] leading-[150%] text-[#3A4050] rounded-none"
+						className="flex flex-row justify-center items-center px-5 py-[8px] gap-2 bg-white border border-[#E5E7EB] font-medium text-[12px] leading-[150%] text-[#344249] rounded-none"
 					>
 						<Image src={require("../../public/icon/Filter_alt.svg")} alt="filter" />
 						Filter
@@ -228,6 +260,8 @@ const Attendance = () => {
 								<NoRecordFound colSpan={7} />
 							) : (
 								dataToRender?.map((record: any) => {
+					const liveAgentId = record?.userId ?? record?.user?.id ?? record?.user?._id;
+					const liveStatus = liveAgentId ? liveAttendance[liveAgentId] : undefined;
 									const checkIn = record?.clockIn
 										? new Date(record?.clockIn).toLocaleTimeString()
 										: '—';
@@ -260,17 +294,20 @@ const Attendance = () => {
 											<td>{checkOut}</td>
 											<td>{totalHour}</td>
 											<td>
-												<div
-													className={`whitespace-nowrap flex flex-row justify-center items-center px-[6px] py-[4px] w-[60px] h-[22px] 
+							<div
+								title={liveStatus?.isPaused && typeof liveStatus.outsideDurationMs === "number" ? `Paused · outside for ${Math.round(liveStatus.outsideDurationMs / 60000)} minutes` : undefined}
+								className={`whitespace-nowrap flex flex-row justify-center items-center px-[6px] py-[4px] ${liveStatus?.isPaused ? "min-w-[60px]" : "w-[60px]"} h-[22px] 
 					border font-medium text-[12px] leading-[18px] 
-					${status === 'Early'
+				${liveStatus?.isPaused
+					? 'bg-[#FFF4E5] border-[#F5C27A] text-[#9A4D00]'
+					: status === 'Early'
 															? 'bg-[#ECFDF3] border-[#ABEFC6] text-[#067647]'
 															: status === 'Late'
 																? 'bg-[#FEF3F2] border-[#FECDCA] text-[#B42318]'
 																: 'bg-[#FFFAF0] border-[#FEDF89] text-[#B54708]'}
 					`}
 												>
-													{status}
+				{liveStatus?.isPaused ? "Paused" : status}
 												</div>
 											</td>
 										</tr>

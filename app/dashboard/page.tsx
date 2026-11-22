@@ -17,6 +17,8 @@ import { useRouter } from 'next/navigation';
 import { useGetAttendanceSummaryQuery, useGetDashboardStatsQuery } from '@/utils/APISlice/attendanceApi';
 import { useGetUsersQuery, useCreateQrTokenMutation } from '@/utils/APISlice/userApi';
 import { useGetOfficeLocationsQuery } from '@/utils/APISlice/officeLocationApi';
+import AgentAttendance from '@/components/AgentAttendance';
+import OrganizationsSummary from './OrganizationsSummary';
 
 const EmployeeDashBoard = () => {
 	const router = useRouter();
@@ -77,9 +79,12 @@ const EmployeeDashBoard = () => {
 	};
 
 	const isSuperAdmin = user?.role?.toUpperCase() === "SUPER_ADMIN";
+	const isAgent = user?.role?.toUpperCase() === "AGENT";
+	const isAdmin = user?.role?.toUpperCase() === "ADMIN";
+	const canManageOrganization = isSuperAdmin || isAdmin;
 	const [selectedOfficeId, setSelectedOfficeId] = useState("");
-	const summaryOfficeId = isSuperAdmin ? selectedOfficeId : (user?.officeId || "");
-	const shouldSkip = !user || (!isSuperAdmin && !user.officeId);
+	const summaryOfficeId = isSuperAdmin || isAdmin ? selectedOfficeId : (user?.officeId || "");
+	const shouldSkip = !user || isAgent || !canManageOrganization;
 
 	const { data: summaryData, isLoading: isLoadingAttendance } = useGetAttendanceSummaryQuery({
 		id: summaryOfficeId,
@@ -96,8 +101,8 @@ const EmployeeDashBoard = () => {
 		startDate: getDateRange(selectedDateFilter).start,
 		endDate: getDateRange(selectedDateFilter).end,
 	}, { skip: shouldSkip });
-	const { data: usersData, isLoading: isLoadingUsers } = useGetUsersQuery();
-	const { data: officeData, isLoading: isLoadingOffice } = useGetOfficeLocationsQuery();
+	const { data: usersData, isLoading: isLoadingUsers } = useGetUsersQuery(undefined, { skip: !canManageOrganization });
+	const { data: officeData, isLoading: isLoadingOffice } = useGetOfficeLocationsQuery(undefined, { skip: !canManageOrganization });
 	const locationOptions = officeData?.data?.data || officeData?.data || officeData || [];
 	const [createQrToken, { isLoading: isLoadingQR }] = useCreateQrTokenMutation();
 
@@ -106,12 +111,6 @@ const EmployeeDashBoard = () => {
 		type: ""
 	});
 	const [dataQR, setDataQR] = useState<any>(null);
-
-	useEffect(() => {
-		if (user?.role?.toUpperCase() === "AGENT") {
-			router.push('/profile');
-		}
-	}, [user, router]);
 
 	// Fetch calender data when filter changes (this will be refactored to use lazy query if needed, 
 	// but for now we'll stick to basic implementation)
@@ -165,8 +164,12 @@ const EmployeeDashBoard = () => {
 	};
 
 
+	if (isAgent) return <AgentAttendance showClockControls />;
+	if (!user) return null;
+
 	return (
 		<div className='w-full'>
+			{isSuperAdmin && <OrganizationsSummary />}
 			<div className='flex flex-col md:flex-row justify-between items-center'>
 				<div>
 					<PageHeader text={"Dashboard Overview"} />
@@ -179,7 +182,7 @@ const EmployeeDashBoard = () => {
 						<button
 							onClick={() => handleDateFilter("Today")}
 							className={`px-3 py-1 text-xs rounded-none border ${selectedDateFilter === "Today"
-								? "!bg-blue-600 text-white !border-blue-600"
+								? "!bg-[#36474F] text-white !border-[#36474F]"
 								: "!bg-white !text-gray-700 !border-gray-300 !hover:bg-gray-50"
 								}`}
 						>
@@ -188,7 +191,7 @@ const EmployeeDashBoard = () => {
 						<button
 							onClick={() => handleDateFilter("Yesterday")}
 							className={`px-3 py-1 text-xs rounded-none border ${selectedDateFilter === "Yesterday"
-								? "!bg-blue-600 text-white !border-blue-600"
+								? "!bg-[#36474F] text-white !border-[#36474F]"
 								: "!bg-white !text-gray-700 !border-gray-300 !hover:bg-gray-50"
 								}`}
 						>
@@ -197,7 +200,7 @@ const EmployeeDashBoard = () => {
 						<button
 							onClick={() => handleDateFilter("Last Week")}
 							className={`px-3 py-1 text-xs rounded-none border ${selectedDateFilter === "Last Week"
-								? "!bg-blue-600 text-white !border-blue-600"
+								? "!bg-[#36474F] text-white !border-[#36474F]"
 								: "!bg-white !text-gray-700 !border-gray-300 !hover:bg-gray-50"
 								}`}
 						>
@@ -206,14 +209,14 @@ const EmployeeDashBoard = () => {
 						<button
 							onClick={() => handleDateFilter("Last Month")}
 							className={`px-3 py-1 text-xs rounded-none border ${selectedDateFilter === "Last Month"
-								? "!bg-blue-600 text-white !border-blue-600"
+								? "!bg-[#36474F] text-white !border-[#36474F]"
 								: "!bg-white !text-gray-700 !border-gray-300 !hover:bg-gray-50"
 								}`}
 						>
 							Last Month
 						</button>
 					</div>
-					{isSuperAdmin && (
+						{canManageOrganization && (
 						<div className="w-full md:w-[200px]">
 							<CustomDropdownOffice
 								label="All Locations"
@@ -234,7 +237,7 @@ const EmployeeDashBoard = () => {
 					/>
 					<button
 						className={`flex flex-row justify-center items-center px-[6px] py-[4px] h-[40px] w-[150px]   border font-medium text-[12px] leading-[18px]  
-												  !bg-[#2563EB] border-[#B9E6FE] text-[#fff] rounded-none
+												  !bg-[#36474F] border-[#DCE4E6] text-[#fff] rounded-none
 									`}
 						onClick={handleSubmit}
 						disabled={isLoadingQR}
@@ -266,7 +269,7 @@ const EmployeeDashBoard = () => {
 						</h3>
 						<button
 							onClick={() => router.push('/attendances')}
-							className="font-bold text-[16px] leading-[17px] text-[#2563EB] cursor-pointer	flex items-center   flex-none  px-4 py-2 bg-white"
+							className="font-bold text-[16px] leading-[17px] text-[#36474F] cursor-pointer	flex items-center   flex-none  px-4 py-2 bg-white"
 						>
 							View All
 						</button>
@@ -289,7 +292,6 @@ const EmployeeDashBoard = () => {
 					</div>
 				</div>
 			</div>
-
 		</div>
 	)
 }

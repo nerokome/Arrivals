@@ -29,7 +29,7 @@ export const leaveApi = baseApi.injectEndpoints({
     }),
 
     getMyLeaveRequests: builder.query<any, void>({
-      query: () => "/leave/my",
+      query: () => "/api/v1/leave/my",
       providesTags: ["LeaveRequest"],
     }),
 
@@ -40,7 +40,7 @@ export const leaveApi = baseApi.injectEndpoints({
 
     createLeaveRequest: builder.mutation<any, any>({
       query: (body) => ({
-        url: "/leave",
+        url: "/api/v1/leave",
         method: "POST",
         body,
       }),

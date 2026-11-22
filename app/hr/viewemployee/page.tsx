@@ -26,7 +26,7 @@ const ViewEmployeeContent = () => {
 	if (employeeId && isLoadingEmployee) {
 		return (
 			<div className="flex justify-center items-center h-[300px] w-full">
-				<SVGLoader width="40px" height="40px" color="#2563EB" />
+				<SVGLoader width="40px" height="40px" color="#36474F" />
 			</div>
 		);
 	}
@@ -49,7 +49,7 @@ const ViewEmployeeContent = () => {
 			<div className="mb-4">
 				<button
 					onClick={() => router.back()}
-					className="cursor-pointer flex flex-row items-center gap-2 text-[#6D7280] hover:text-[#3A4050] text-[14px] font-medium transition bg-transparent border-0 outline-none p-0"
+					className="cursor-pointer flex flex-row items-center gap-2 text-[#6D7280] hover:text-[#344249] text-[14px] font-medium transition bg-transparent border-0 outline-none p-0"
 				>
 					<svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -64,7 +64,7 @@ const ViewEmployeeContent = () => {
 					textsupSmall={displayUser?.email} />
 				<button
 					onClick={() => setIsEditModalOpen(true)}
-					className="cursor-pointer flex flex-row justify-center items-center px-4 py-[8px] gap-2 h-[40px] !bg-[#2563EB]  font-normal text-[14px] leading-[150%] text-[#FFFFFF] rounded-none">
+					className="cursor-pointer flex flex-row justify-center items-center px-4 py-[8px] gap-2 h-[40px] !bg-[#36474F]  font-normal text-[14px] leading-[150%] text-[#FFFFFF] rounded-none">
 					<Image
 						src={require("../../../public/icon/Edit_light.svg")}
 						alt="Logo"
@@ -81,7 +81,7 @@ const ViewEmployeeContent = () => {
 						<div className='flex flex-row  gap-[20px] w-full pt-[10px] border border-[#fff] border-b-[#E5E7EB]'>
 							<button
 								onClick={() => setActiveTabs(1)}
-								className={`rounded-none cursor-pointer relative px-[4px] py-[5px] text-[16px] leading-[150%] whitespace-nowrap font-medium ${activeTabs === 1 ? 'text-[#2563EB] border-b border-[#2563EB]' : 'text-[#3A4050]'
+								className={`rounded-none cursor-pointer relative px-[4px] py-[5px] text-[16px] leading-[150%] whitespace-nowrap font-medium ${activeTabs === 1 ? 'text-[#36474F] border-b border-[#36474F]' : 'text-[#344249]'
 									}`}
 							>
 								Personal Information
@@ -107,7 +107,7 @@ const EmployeeDashBoard = () => {
 	return (
 		<Suspense fallback={
 			<div className="flex justify-center items-center h-[300px] w-full">
-				<SVGLoader width="40px" height="40px" color="#2563EB" />
+				<SVGLoader width="40px" height="40px" color="#36474F" />
 			</div>
 		}>
 			<ViewEmployeeContent />

@@ -6,6 +6,7 @@
 @import url(../css/footer.css);
 @import url(../css/Form.css);
 @import url(../css/button.css);
+@import "leaflet/dist/leaflet.css";
  
 
  
@@ -21,29 +22,36 @@
 }
 
 :root {
+  --glacier: #EDF2F3;
+  --glacier-deep: #DCE4E6;
+  --charcoal: #263238;
+  --charcoal-soft: #3C4B51;
   --accent-white: #fff;
-  --background: #F9FAFB;
+  --background: var(--glacier);
   --photo-background: #f4f4f4;
-  --accent-black: #000;
-  --accent-black-two: #05162e;
-  --accent-blue: #2563EB;
+  --accent-black: var(--charcoal);
+  --accent-black-two: var(--charcoal);
+  --accent-blue: var(--charcoal);
+  --accent-blue-hover: #1B2529;
+  --accent-blue-light: var(--glacier-deep);
+  --accent-blue-soft: #CAD5D8;
   --accent-green: #0ABF7E;
-  --accent-background-blue: #eaf6ff;
+  --accent-background-blue: var(--glacier);
   --second-text-color: #737373;
-  --text-color: #292929;
-  --underline-text: #393646;
-  --text-input: #393e46;
+  --text-color: var(--charcoal-soft);
+  --underline-text: var(--charcoal);
+  --text-input: var(--charcoal-soft);
   --accent-profile: #f8c993;
-  --border-color: #e5e4e9;
-  --border: #34495d;
-   --gray-light: #8F8F8F;
+  --border-color: var(--glacier-deep);
+  --border: #CBD5D8;
+  --gray-light: #7A898E;
 }
 
 html,
 body {
   max-width: 100vw;
   overflow-x: hidden; 
-  background-color: #F9FAFB 
+  background-color: var(--glacier);
 }
 img,
 svg {
@@ -94,7 +102,7 @@ button:active {
 button {
   border: none;
   transition: background-color 0.3s ease, transform 0.2s ease !important;
-    background: none !important;
+  background: transparent;
 }
 
 
@@ -224,4 +232,167 @@ main {
     'sidenav header'
     'sidenav main'
     'sidenav footer';
+}
+
+#page-wrapper > main {
+  min-width: 0;
+}
+
+#page-wrapper main {
+  background: var(--glacier);
+}
+
+#header {
+  background: var(--glacier);
+  border-bottom-color: var(--glacier-deep) !important;
+}
+
+#side-nav {
+  border-right-color: #3D4B50;
+}
+
+.table-container {
+  border: 1px solid var(--glacier-deep);
+  border-radius: 12px;
+  background: var(--accent-white);
+  box-shadow: 0 2px 8px rgb(38 50 56 / 4%);
+}
+
+.table {
+  border-color: var(--glacier-deep);
+  border-radius: 12px !important;
+}
+
+thead {
+  background: #E5EBED;
+}
+
+tbody tr:hover {
+  background: #F1F4F5 !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--charcoal-soft);
+  box-shadow: 0 0 0 3px rgb(220 228 230 / 80%);
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--charcoal-soft);
+  outline-offset: 2px;
+}
+
+body {
+  color: var(--charcoal);
+}
+
+button,
+input,
+select,
+textarea {
+  accent-color: var(--charcoal);
+}
+
+::selection {
+  color: var(--charcoal);
+  background: var(--glacier-deep);
+}
+
+/* Shared small-screen layout for every authenticated page. */
+@media (max-width: 768px) {
+  html,
+  body {
+    min-height: 100%;
+  }
+
+  #page-wrapper {
+    min-height: 100dvh;
+    height: auto;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 64px minmax(0, 1fr);
+    grid-template-areas: "header" "main";
+  }
+
+  #header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 60;
+    min-width: 0;
+    width: 100%;
+    height: 64px;
+    padding: 0 16px !important;
+  }
+
+  #header > div:last-child {
+    gap: 8px;
+  }
+
+  #header h3 {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  #header > div:last-child > div:first-child > div:nth-child(2) {
+    display: none;
+  }
+
+  #page-wrapper > main {
+    min-height: 0;
+    padding: 20px 16px calc(110px + env(safe-area-inset-bottom));
+    overflow-x: hidden;
+  }
+
+  #footer {
+    display: block !important;
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 50;
+    grid-area: auto;
+    width: 100%;
+    height: auto;
+    padding: 0;
+  }
+
+  #footer > div {
+    position: static;
+    padding-bottom: env(safe-area-inset-bottom);
+    height: calc(64px + env(safe-area-inset-bottom));
+  }
+
+  .table-container {
+    max-width: 100%;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .table-container table {
+    min-width: 640px;
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 380px) {
+  #page-wrapper > main {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  #footer > div a span {
+    font-size: 10px;
+  }
 }

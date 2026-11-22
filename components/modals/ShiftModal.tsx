@@ -326,7 +326,7 @@ const ShiftModal = ({ isOpen, setIsOpen, officeId }: ShiftModalProps) => {
                 </div>
                 <div className="flex gap-2">
                  <button
-                  className="text-blue-600 hover:text-blue-800 text-sm"
+                  className="text-[#36474F] hover:text-[#202A2F] text-sm"
                   onClick={() => {
                    setEditingShiftId(shift.id);
                    setEditingShiftData({
@@ -367,7 +367,7 @@ const ShiftModal = ({ isOpen, setIsOpen, officeId }: ShiftModalProps) => {
                    <div
                     key={user.id}
                     className={`flex items-center justify-between p-2 border rounded ${user.shiftId === shift.id
-                     ? "border-blue-500 bg-blue-50"
+                     ? "border-[#53666D] bg-[#EDF2F3]"
                      : "border-gray-200"
                      }`}
                    >
@@ -380,7 +380,7 @@ const ShiftModal = ({ isOpen, setIsOpen, officeId }: ShiftModalProps) => {
                      </span>
                     ) : (
                      <button
-                      className="text-xs text-blue-600 hover:text-blue-800"
+                      className="text-xs text-[#36474F] hover:text-[#202A2F]"
                       onClick={() =>
                        handleAssignUser(user.id, shift.id)
                       }

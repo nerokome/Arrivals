@@ -15,10 +15,11 @@ import CustomDropdownOffice from '@/components/CustomDropdownOffice';
 import { useUserPrivileges } from '@/utils/userPrivileges';
 
 const AttendanceSummary = () => {
-	const { user, isSuperAdmin } = useUserPrivileges();
+	const { user, isSuperAdmin, isAdmin } = useUserPrivileges();
+	const canFilterOffice = isSuperAdmin || isAdmin;
 	const [selectedOfficeId, setSelectedOfficeId] = useState("");
-	const summaryOfficeId = isSuperAdmin ? selectedOfficeId : (user?.officeId || "");
-	const shouldSkip = !user || (!isSuperAdmin && !user.officeId);
+	const summaryOfficeId = canFilterOffice ? selectedOfficeId : (user?.officeId || "");
+	const shouldSkip = !user || (!canFilterOffice && !user.officeId);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [limit, setLimit] = useState(10);
 	const [startDate, setStartDate] = useState("");
@@ -149,7 +150,7 @@ const AttendanceSummary = () => {
 						onChange={(e) => setSearchQuery(e.target.value)}
 						placeholder="Search employees..."
 					/>
-					{isSuperAdmin && (
+					{canFilterOffice && (
 						<div className="w-full md:w-[200px]">
 							<CustomDropdownOffice
 								label="All Locations"
@@ -166,12 +167,12 @@ const AttendanceSummary = () => {
 				</div>
 
 				<div className='flex flex-col md:flex-row gap-5 relative'>
-					<button className="flex flex-row justify-center items-center px-5 py-[8px] gap-2 !bg-[#2563EB]  font-normal text-[14px] leading-[150%] text-[#FFFFFF] rounded-none">
+					<button className="flex flex-row justify-center items-center px-5 py-[8px] gap-2 !bg-[#36474F]  font-normal text-[14px] leading-[150%] text-[#FFFFFF] rounded-none">
 						Export
 					</button>
 					<button
 						onClick={() => setDropFilter(!dropFilter)}
-						className="flex flex-row justify-center items-center px-5 py-[8px] gap-2 bg-white border border-[#E5E7EB] font-medium text-[12px] leading-[150%] text-[#3A4050] rounded-none"
+						className="flex flex-row justify-center items-center px-5 py-[8px] gap-2 bg-white border border-[#E5E7EB] font-medium text-[12px] leading-[150%] text-[#344249] rounded-none"
 					>
 						<Image src={require("../../public/icon/Filter_alt.svg")} alt="filter" />
 						Filter
@@ -291,7 +292,7 @@ const AttendanceSummary = () => {
 															: status === 'Absent'
 																? 'bg-[#FFFAF0] border-[#FEDF89] text-[#B54708]'
 																: status === 'WFH'
-																	? 'bg-[#EFF6FF] border-[#BFDBFE] text-[#1D4ED8]'
+																	? 'bg-[#EDF2F3] border-[#CAD5D8] text-[#36474F]'
 																	: status === 'On Leave'
 																		? 'bg-[#F5F3FF] border-[#DDD6FE] text-[#7e3ce9]'
 																		: status === 'Not Scheduled'

@@ -2,6 +2,24 @@ import { baseApi } from "./baseApi";
 
 export const attendanceApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    getAttendanceByUser: builder.query<any, string>({
+      query: (userId) => `/api/v1/attendance/${encodeURIComponent(userId)}`,
+      providesTags: ["Attendance"],
+    }),
+    submitAgentAttendance: builder.mutation<any, {
+      token: string;
+      userId: string;
+      userLat: number;
+      userLng: number;
+      deviceId: string;
+    }>({
+      query: (body) => ({
+        url: "/api/v1/attendance",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Attendance"],
+    }),
     getAttendance: builder.query<any, void>({
       query: () => "/attendance",
       providesTags: ["Attendance"],
@@ -68,14 +86,25 @@ export const attendanceApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Attendance"],
     }),
+    
+    resetUserDevice: builder.mutation<any, { userId: string }>({
+      query: ({ userId }) => ({
+        url: `/attendance/${userId}/reset-device`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Attendance"],
+    }),
   }),
 });
 
 export const {
   useGetAttendanceQuery,
+  useGetAttendanceByUserQuery,
+  useSubmitAgentAttendanceMutation,
   useGetAttendanceParamsQuery,
   useGetAttendanceSummaryQuery,
   useAddAttendanceManualMutation,
   useGetDashboardStatsQuery,
   useUpdateAttendanceStatusMutation,
+  useResetUserDeviceMutation,
 } = attendanceApi;

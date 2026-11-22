@@ -40,12 +40,10 @@
   align-items: center;
   flex-direction: column;  
   gap: 4rem;
-  height: 100vh;  
-    background-image: url('../public/img/background.png');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
-    background-attachment: fixed; 
+  min-height: 100vh;
+  height: auto;
+  padding: 2rem 1rem;
+  background: radial-gradient(ellipse at top, #FFFFFF 0%, #EDF2F3 58%, #DCE4E6 100%);
 }
 
 .form-container_text{
@@ -100,10 +98,12 @@ color: var(--accent-black);
 }
 
 .login-form-container {  
+	width: min(100%, 460px);
 	background-color: var(--accent-white) !important;
-	padding: 3rem !important;  
-	border-radius: 1rem !important; 
-  box-shadow: 0 1px 15px rgba(27,31,35,.15), 0 0 1px rgba(106,115,125,.35) !important;
+	padding: 2.5rem !important;
+	border: 1px solid var(--glacier-deep);
+	border-radius: 1.25rem !important;
+	box-shadow: 0 20px 55px rgba(38,50,56,.12), 0 2px 8px rgba(38,50,56,.05) !important;
 }
 
 .login-form-container > p:nth-child(1) {

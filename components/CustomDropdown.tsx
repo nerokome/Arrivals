@@ -99,7 +99,7 @@ const CustomDropdown = ({
 						return (
 							<div
 								key={typeof option === "string" ? option : option.id}
-								className="p-1 text-[16px] text-[#344054] hover:bg-[#F9FAFB] hover:text-[#2563EB] cursor-pointer transition-colors duration-150"
+								className="p-1 text-[16px] text-[#344054] hover:bg-[#F9FAFB] hover:text-[#36474F] cursor-pointer transition-colors duration-150"
 								onClick={() => handleSelect(option)}
 							>
 								{label}

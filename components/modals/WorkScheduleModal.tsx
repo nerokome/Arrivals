@@ -311,7 +311,7 @@ const WorkScheduleModal = ({ isOpen, setIsOpen }: WorkScheduleModalProps) => {
                   <button
                     className={`flex-1 py-3 transition-colors ${
                       target === "SINGLE"
-                        ? "!bg-blue-600 !text-white"
+                        ? "!bg-[#36474F] !text-white"
                         : "!bg-white !text-black"
                     }`}
                     onClick={() => switchTarget("SINGLE")}
@@ -322,7 +322,7 @@ const WorkScheduleModal = ({ isOpen, setIsOpen }: WorkScheduleModalProps) => {
                   <button
                     className={`flex-1 py-3 transition-colors ${
                       target === "BULK"
-                        ? "!bg-blue-600 !text-white"
+                        ? "!bg-[#36474F] !text-white"
                         : "!bg-white !text-black"
                     }`}
                     onClick={() => switchTarget("BULK")}
@@ -382,8 +382,8 @@ const WorkScheduleModal = ({ isOpen, setIsOpen }: WorkScheduleModalProps) => {
                             onClick={() =>
                               loadEmployeeSchedule(user.id, user.name)
                             }
-                            className={`p-3 cursor-pointer hover:bg-blue-50 ${
-                              userId === user.id ? "bg-blue-100" : ""
+                            className={`p-3 cursor-pointer hover:bg-[#EDF2F3] ${
+                              userId === user.id ? "bg-[#DCE4E6]" : ""
                             }`}
                           >
                             {user.name}
@@ -393,7 +393,7 @@ const WorkScheduleModal = ({ isOpen, setIsOpen }: WorkScheduleModalProps) => {
                         <>
                           <div
                             onClick={toggleSelectAllFiltered}
-                            className="p-3 cursor-pointer hover:bg-blue-50 flex items-center gap-2 border-b border-gray-200 font-medium text-sm"
+                            className="p-3 cursor-pointer hover:bg-[#EDF2F3] flex items-center gap-2 border-b border-gray-200 font-medium text-sm"
                           >
                             <input
                               type="checkbox"
@@ -410,9 +410,9 @@ const WorkScheduleModal = ({ isOpen, setIsOpen }: WorkScheduleModalProps) => {
                             <div
                               key={user.id}
                               onClick={() => toggleUser(user.id)}
-                              className={`p-3 cursor-pointer hover:bg-blue-50 flex items-center gap-2 ${
+                              className={`p-3 cursor-pointer hover:bg-[#EDF2F3] flex items-center gap-2 ${
                                 selectedUserIds.includes(user.id)
-                                  ? "bg-blue-100"
+                                  ? "bg-[#DCE4E6]"
                                   : ""
                               }`}
                             >
@@ -436,12 +436,12 @@ const WorkScheduleModal = ({ isOpen, setIsOpen }: WorkScheduleModalProps) => {
                     {selectedUsers.map((user: any) => (
                       <span
                         key={user.id}
-                        className="flex items-center gap-1.5 bg-blue-50 border border-blue-200 text-blue-700 text-sm px-2.5 py-1 rounded-full"
+                        className="flex items-center gap-1.5 bg-[#EDF2F3] border border-[#CAD5D8] text-[#263238] text-sm px-2.5 py-1 rounded-full"
                       >
                         {user.name}
                         <button
                           onClick={() => removeUser(user.id)}
-                          className="hover:text-blue-900"
+                          className="hover:text-[#182126]"
                         >
                           <AiOutlineClose size={12} />
                         </button>
@@ -454,7 +454,7 @@ const WorkScheduleModal = ({ isOpen, setIsOpen }: WorkScheduleModalProps) => {
                   <button
                     className={`flex-1 py-3 transition-colors ${
                       mode === "PRESENT"
-                        ? "!bg-blue-600 !text-white"
+                        ? "!bg-[#36474F] !text-white"
                         : "!bg-white !text-black"
                     }`}
                     onClick={() => setMode("PRESENT")}
@@ -465,7 +465,7 @@ const WorkScheduleModal = ({ isOpen, setIsOpen }: WorkScheduleModalProps) => {
                   <button
                     className={`flex-1 py-3 transition-colors ${
                       mode === "WFH"
-                        ? "!bg-blue-600 !text-white"
+                        ? "!bg-[#36474F] !text-white"
                         : "!bg-white !text-black"
                     }`}
                     onClick={() => setMode("WFH")}
@@ -481,7 +481,7 @@ const WorkScheduleModal = ({ isOpen, setIsOpen }: WorkScheduleModalProps) => {
                       onClick={() => toggleDay(day)}
                       className={`border border-gray-300 py-2 rounded transition-colors ${
                         activeDays.includes(day)
-                          ? "!bg-blue-600 !text-white !border-blue-600"
+                          ? "!bg-[#36474F] !text-white !border-[#36474F]"
                           : "!bg-white !text-black"
                       }`}
                     >

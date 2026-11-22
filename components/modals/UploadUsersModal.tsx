@@ -253,7 +253,7 @@ const UploadUsersModal = ({ isOpen, setIsOpen }: UploadUsersModalProps) => {
 										{/* Drop Zone */}
 										<div
 											className={`w-full h-[200px] border-2 border-dashed rounded-lg flex flex-col items-center justify-center p-4 transition duration-300 relative ${isDragActive
-												? "border-[#2563EB] bg-[#EFF6FF]"
+												? "border-[#36474F] bg-[#EDF2F3]"
 												: "border-[#E5E7EB] hover:border-gray-400 bg-gray-50"
 												}`}
 											onDragEnter={handleDrag}
@@ -271,12 +271,12 @@ const UploadUsersModal = ({ isOpen, setIsOpen }: UploadUsersModalProps) => {
 
 											{!file ? (
 												<div className="flex flex-col items-center justify-center text-center gap-2">
-													<FiUploadCloud className="text-[40px] text-[#2563EB] mb-2 animate-bounce" />
+													<FiUploadCloud className="text-[40px] text-[#36474F] mb-2 animate-bounce" />
 													<p className="text-sm font-medium text-gray-700">
 														Drag & drop your file here, or{" "}
 														<span
 															onClick={onButtonClick}
-															className="text-[#2563EB] cursor-pointer hover:underline"
+															className="text-[#36474F] cursor-pointer hover:underline"
 														>
 															browse
 														</span>
@@ -301,14 +301,14 @@ const UploadUsersModal = ({ isOpen, setIsOpen }: UploadUsersModalProps) => {
 										</div>
 
 										{/* Download Template Button */}
-										<div className="flex justify-between items-center bg-blue-50 p-4 border border-blue-100 rounded-lg">
+										<div className="flex justify-between items-center bg-[#EDF2F3] p-4 border border-[#DCE4E6] rounded-lg">
 											<div className="flex flex-col">
-												<span className="text-xs font-semibold text-blue-800">Need a sample file template?</span>
-												<span className="text-[11px] text-blue-600">Download the recommended structure to ensure proper upload formatting.</span>
+												<span className="text-xs font-semibold text-[#202A2F]">Need a sample file template?</span>
+												<span className="text-[11px] text-[#36474F]">Download the recommended structure to ensure proper upload formatting.</span>
 											</div>
 											<button
 												onClick={downloadSampleTemplate}
-												className="text-xs bg-white text-blue-600 border border-blue-200 px-3 py-1.5 hover:bg-blue-100 hover:text-blue-800 transition cursor-pointer font-medium"
+												className="text-xs bg-white text-[#36474F] border border-[#CAD5D8] px-3 py-1.5 hover:bg-[#DCE4E6] hover:text-[#202A2F] transition cursor-pointer font-medium"
 											>
 												Download CSV
 											</button>

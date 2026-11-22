@@ -35,7 +35,7 @@ const Chart = ({ earlyCount, lateCount }: { earlyCount?: number; lateCount?: num
 		labels: ['Early', 'Late'],
 		datasets: [{
 			data: [safeEarlyCount, safeLateCount],
-			backgroundColor: ['#2563EB', '#e8776f'],
+			backgroundColor: ['#36474F', '#e8776f'],
 			borderWidth: 1
 		}]
 	};
@@ -47,7 +47,7 @@ const Chart = ({ earlyCount, lateCount }: { earlyCount?: number; lateCount?: num
 			</div>
 			<div className='flex flex-row items-center gap-6'>
 				<div className='flex flex-row items-center gap-2'>
-					<div className="w-[14px] h-[14px] bg-[#2563EB] rounded-[2px]"></div>
+					<div className="w-[14px] h-[14px] bg-[#36474F] rounded-[2px]"></div>
 					<div className="font-montserrat font-medium text-[14px] leading-[18px] text-[#141414]">
 						Early
 					</div>

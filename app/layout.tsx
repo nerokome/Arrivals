@@ -1,18 +1,21 @@
 import type { Metadata } from "next";
 import React from "react";
-import { Poppins } from "next/font/google";
+import { Lato } from "next/font/google";
 import "./globals.css";
 import NewProvider from "@/app/utils/provider";
 
-// Load Poppins font
-const poppins = Poppins({
+// Load Lato across the app
+const lato = Lato({
   subsets: ["latin"],
-  weight: ["400"], // Add other weights like "500", "700" if needed
+  weight: ["100", "300", "400", "700", "900"],
 });
 
 export const metadata: Metadata = {
-  title: "Attendly",
-  description: "Attendence Management System",
+  title: "Punchly",
+  description: "Attendance Management System",
+  icons: {
+    icon: "/punchly-icon.svg",
+  },
 };
 
 export default function RootLayout({
@@ -25,10 +28,10 @@ export default function RootLayout({
       <head>
         <meta
           name="viewport"
-          content="width=device-width, maximum-scale=1.0, user-scalable=no, initial-scale=1, shrink-to-fit=no"
+          content="width=device-width, initial-scale=1, viewport-fit=cover"
         />
       </head>
-      <body className={`${poppins.className} antialiased`}>
+      <body className={`${lato.className} antialiased`}>
         <NewProvider>{children}</NewProvider>
       </body>
     </html>

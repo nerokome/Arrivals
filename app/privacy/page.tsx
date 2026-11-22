@@ -9,14 +9,14 @@ export default function PrivacyPolicy() {
     <div className="min-h-screen bg-slate-50 flex flex-col justify-between py-12 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-100 flex-grow flex flex-col">
         {/* Header decoration */}
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-10 sm:px-12 text-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+        <div className="bg-gradient-to-r from-[#36474F] to-[#263238] px-6 py-10 sm:px-12 text-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <Shield className="w-6 h-6 text-blue-200" />
-              <span className="text-blue-100 tracking-wider text-xs font-semibold uppercase">Security & Privacy</span>
+              <Shield className="w-6 h-6 text-[#CAD5D8]" />
+              <span className="text-[#DCE4E6] tracking-wider text-xs font-semibold uppercase">Security & Privacy</span>
             </div>
             <h1 className="text-3xl font-extrabold tracking-tight">Privacy Policy</h1>
-            <p className="mt-2 text-blue-100 text-sm max-w-xl">
+            <p className="mt-2 text-[#DCE4E6] text-sm max-w-xl">
               Last updated: July 8, 2026. Please read this Privacy Policy carefully to understand our practices regarding your data.
             </p>
           </div>
@@ -33,7 +33,7 @@ export default function PrivacyPolicy() {
         <div className="px-6 py-10 sm:px-12 text-slate-700 space-y-8 flex-grow">
           <section className="space-y-3">
             <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-2">
-              <Lock className="w-5 h-5 text-blue-600" />
+              <Lock className="w-5 h-5 text-[#36474F]" />
               1. Information We Collect
             </h2>
             <p className="leading-relaxed text-slate-600 text-sm">
@@ -48,7 +48,7 @@ export default function PrivacyPolicy() {
 
           <section className="space-y-3">
             <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-2">
-              <Eye className="w-5 h-5 text-blue-600" />
+              <Eye className="w-5 h-5 text-[#36474F]" />
               2. How We Use Your Information
             </h2>
             <p className="leading-relaxed text-slate-600 text-sm">
@@ -63,7 +63,7 @@ export default function PrivacyPolicy() {
 
           <section className="space-y-3">
             <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-2">
-              <CheckCircle2 className="w-5 h-5 text-blue-600" />
+              <CheckCircle2 className="w-5 h-5 text-[#36474F]" />
               3. Data Security and Sharing
             </h2>
             <p className="leading-relaxed text-slate-600 text-sm">
@@ -89,7 +89,7 @@ export default function PrivacyPolicy() {
 
         {/* Footer */}
         <div className="bg-slate-50 px-6 py-6 sm:px-12 border-t border-slate-100 text-center text-xs text-slate-400">
-          &copy; {new Date().getFullYear()} Attendly by Outcess. All rights reserved.
+          &copy; {new Date().getFullYear()} Punchly by Outcess. All rights reserved.
         </div>
       </div>
     </div>

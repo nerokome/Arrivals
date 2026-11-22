@@ -44,7 +44,7 @@ const QrScanner = ({ dataQR, isLoadingQR }: any) => {
 		<div className="flex flex-col items-center h-full justify-center gap-4 w-[100%] bg-white border border-[#E5E7EB] shadow-[0px_1px_2px_rgba(16,24,40,0.05)] p-4">
 			{isLoadingQR ? (
 				<div className="flex-1 flex items-center justify-center">
-					<SVGLoader width={"40px"} height={"40px"} color={"#0866FF"} />
+					<SVGLoader width={"40px"} height={"40px"} color={"#36474F"} />
 				</div>
 			) : data?.token ? (
 				<div className="flex flex-col items-center justify-center w-full h-full gap-3">
@@ -54,7 +54,7 @@ const QrScanner = ({ dataQR, isLoadingQR }: any) => {
 					<div className="flex gap-2 w-full max-w-[200px] justify-center">
 						<button 
 							onClick={() => downloadQR("qr-svg")}
-							className="flex-1 flex items-center justify-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-blue-600 bg-blue-50 border border-blue-200 hover:bg-blue-100 hover:text-blue-800 transition rounded-none cursor-pointer"
+							className="flex-1 flex items-center justify-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-[#36474F] bg-[#EDF2F3] border border-[#CAD5D8] hover:bg-[#DCE4E6] hover:text-[#202A2F] transition rounded-none cursor-pointer"
 						>
 							<svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -100,7 +100,7 @@ const QrScanner = ({ dataQR, isLoadingQR }: any) => {
 						</div>
 						<button
 							onClick={() => downloadQR("qr-svg-fullscreen")}
-							className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-none transition cursor-pointer"
+							className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[#36474F] hover:bg-[#263238] text-white font-semibold rounded-none transition cursor-pointer"
 						>
 							<svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
