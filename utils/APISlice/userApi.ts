@@ -1,5 +1,12 @@
 import { baseApi } from './baseApi';
 
+export type QrTokenType = 'CHECK_IN' | 'CHECK_OUT';
+
+export interface CreateQrTokenPayload {
+  officeId: string;
+  type: QrTokenType;
+}
+
 export const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getUsers: builder.query<any, void>({
@@ -60,7 +67,7 @@ export const userApi = baseApi.injectEndpoints({
         body,
       }),
     }),
-    createQrToken: builder.mutation<any, any>({
+    createQrToken: builder.mutation<any, CreateQrTokenPayload>({
       query: (body) => ({
         url: '/qr-token',
         method: 'POST',

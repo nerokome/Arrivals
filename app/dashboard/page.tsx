@@ -103,26 +103,22 @@ const EmployeeDashBoard = () => {
 	}, { skip: shouldSkip });
 	const { data: usersData, isLoading: isLoadingUsers } = useGetUsersQuery(undefined, { skip: !canManageOrganization });
 	const { data: officeData, isLoading: isLoadingOffice } = useGetOfficeLocationsQuery(undefined, { skip: !canManageOrganization });
-	const locationOptions = officeData?.data?.data || officeData?.data || officeData || [];
+	const offices = officeData?.data?.data || officeData?.data || officeData || [];
+	const accessibleOfficeOptions = (Array.isArray(offices) ? offices : [])
+		.map((office: any) => ({
+			id: office.id ?? office._id,
+			name: office.name,
+			address: office.address ?? "",
+		}))
+		.filter((office: { id?: string; name?: string }) => Boolean(office.id && office.name));
 	const [createQrToken, { isLoading: isLoadingQR }] = useCreateQrTokenMutation();
 
-	const [inputs, setInputs] = useState({
-		officeId: "",
-		type: ""
-	});
+	const [selectedQrOfficeId, setSelectedQrOfficeId] = useState("");
+	const [selectedQrType, setSelectedQrType] = useState<"CHECK_IN" | "CHECK_OUT">("CHECK_IN");
 	const [dataQR, setDataQR] = useState<any>(null);
 
 	// Fetch calender data when filter changes (this will be refactored to use lazy query if needed, 
 	// but for now we'll stick to basic implementation)
-
-	useEffect(() => {
-		if (user?.officeId) {
-			setInputs(prev => ({
-				...prev,
-				officeId: user.officeId,
-			}));
-		}
-	}, [user?.officeId]);
 
 	// Extract data from RTK Query responses
 	const users = usersData?.data?.users || usersData?.data?.data?.data || usersData?.data?.data || usersData?.data || [];
@@ -138,16 +134,17 @@ const EmployeeDashBoard = () => {
 		})
 		: [];
 
-	const handleOnChange = (input: string, value: string) => {
-		setInputs((prevState) => ({
-			...prevState,
-			[input]: value,
-		}));
-	};
-
 	const handleSubmit = async () => {
+		if (!selectedQrOfficeId) {
+			toast.error("Choose an office before creating a QR code");
+			return;
+		}
+
 		try {
-			const res = await createQrToken(inputs).unwrap();
+			const res = await createQrToken({
+				officeId: selectedQrOfficeId,
+				type: selectedQrType,
+			}).unwrap();
 			setDataQR(res.data || res);
 			toast.success("QR Create!");
 		} catch (error: any) {
@@ -220,7 +217,7 @@ const EmployeeDashBoard = () => {
 						<div className="w-full md:w-[200px]">
 							<CustomDropdownOffice
 								label="All Locations"
-								options={[{ id: "", name: "All Locations", address: "" }, ...locationOptions]}
+								options={[{ id: "", name: "All Locations", address: "" }, ...accessibleOfficeOptions]}
 								name="officeId"
 								handleOnChange={(_, value) => setSelectedOfficeId(value)}
 								loading={isLoadingOffice}
@@ -228,19 +225,28 @@ const EmployeeDashBoard = () => {
 						</div>
 					)}
 				</div>
-				<div className='flex flex-row gap-2 w-[100%]  md:w-[27%] pt-[20px] md:p-[0px]'>
+			<div className='flex flex-col gap-2 w-[100%] md:w-[27%] pt-[20px] md:p-[0px]'>
+					{canManageOrganization && (
+						<CustomDropdownOffice
+							label="Choose Office"
+							options={accessibleOfficeOptions}
+							name="qrOfficeId"
+							handleOnChange={(_, value) => setSelectedQrOfficeId(value)}
+							loading={isLoadingOffice}
+						/>
+					)}
 					<Dropdowns
 						label="Clock Type"
 						options={["CHECK_IN", "CHECK_OUT"]}
 						name="type"
-						handleOnChange={handleOnChange}
+						handleOnChange={(_, value) => setSelectedQrType(value as "CHECK_IN" | "CHECK_OUT")}
 					/>
 					<button
 						className={`flex flex-row justify-center items-center px-[6px] py-[4px] h-[40px] w-[150px]   border font-medium text-[12px] leading-[18px]  
 												  !bg-[#36474F] border-[#DCE4E6] text-[#fff] rounded-none
 									`}
 						onClick={handleSubmit}
-						disabled={isLoadingQR}
+						disabled={isLoadingQR || !canManageOrganization}
 					>
 						Create
 					</button>
@@ -280,7 +286,7 @@ const EmployeeDashBoard = () => {
 
 				<div className='w-full md:w-[30%] h-full '>
 					<div className=' mb-4'>
-						<CustomDateDropdown label={''} name={''} handleOnChange={handleOnChange} />
+						<CustomDateDropdown label={''} name={''} handleOnChange={(_, value) => handleDateFilter(value)} />
 
 					</div>
 
