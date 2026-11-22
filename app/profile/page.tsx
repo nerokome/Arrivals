@@ -18,11 +18,6 @@ import type { OrganizationInfo } from "@/utils/auth";
 
 type OrganizationImageType = "profilePicture" | "banner";
 
-const getOrganizationImageSrc = (imageUrl?: string | null) => {
-  if (!imageUrl) return "";
-  return `/api/organization-image?url=${encodeURIComponent(imageUrl)}`;
-};
-
 const ProfileContent = () => {
   const { user } = useUserPrivileges();
   const isAgent = user?.role?.toUpperCase() === "AGENT";
@@ -444,7 +439,7 @@ const ProfileContent = () => {
                 const isProfilePicture = type === "profilePicture";
                 const title = isProfilePicture ? "Profile picture" : "Organization banner";
                 const savedUrl = isProfilePicture ? profilePictureUrl : organization?.bannerUrl;
-                const preview = previewUrls[type] || getOrganizationImageSrc(savedUrl);
+                const preview = previewUrls[type] || savedUrl || "";
                 return (
                   <section key={type} className="border border-[#E5E7EB] p-5 flex flex-col gap-4">
                     <div>

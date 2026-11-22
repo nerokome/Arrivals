@@ -14,8 +14,6 @@ type SignupForm = {
   gender: string;
 };
 
-type ImageType = "banner";
-
 const getRequestErrorMessage = (error: unknown, fallback: string) => {
   const requestError = error as {
     response?: { data?: { message?: unknown } };
@@ -63,7 +61,6 @@ export default function OrganizationSignupPage() {
   const [step, setStep] = useState<"signup" | "image" | "complete">("signup");
   const [form, setForm] = useState(initialForm);
   const [token, setToken] = useState("");
-  const imageType: ImageType = "banner";
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState("");
   const [uploadedImageUrl, setUploadedImageUrl] = useState("");
@@ -156,7 +153,6 @@ export default function OrganizationSignupPage() {
     try {
       const body = new FormData();
       body.append("image", imageFile);
-      body.append("imageType", imageType);
       const response = await fetch(organizationEndpoint("/organizations/me/image"), {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
@@ -167,7 +163,7 @@ export default function OrganizationSignupPage() {
         const messages = getValidationMessages(responseData);
         throw new Error(messages.join(" ") || responseData?.message || "Unable to upload the image. Please try again.");
       }
-      const organization = responseData?.organization ?? responseData?.data?.organization ?? responseData?.data;
+      const organization = responseData?.data?.organization ?? responseData?.organization ?? responseData?.data ?? responseData;
       const responseImageUrl = organization?.imageUrl ?? responseData?.imageUrl;
       const bannerUrl = organization?.bannerUrl ?? organization?.banner ?? responseImageUrl;
       const imageUrl = bannerUrl;

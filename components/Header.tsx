@@ -12,9 +12,7 @@ const Header = () => {
   const [organizationName, setOrganizationName] = useState(user?.organization?.name || "Your Organization");
   const router = useRouter();
 
-  const profilePictureSrc = user?.profilePictureUrl
-    ? `/api/organization-image?url=${encodeURIComponent(user.profilePictureUrl)}`
-    : "";
+  const profilePictureSrc = user?.profilePictureUrl ?? "";
 
 
 

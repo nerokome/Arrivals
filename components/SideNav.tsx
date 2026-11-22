@@ -12,10 +12,6 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useUserPrivileges } from "@/utils/userPrivileges";
 
-const getOrganizationImageSrc = (imageUrl: string) => {
-  return `/api/organization-image?url=${encodeURIComponent(imageUrl)}`;
-};
-
 const SideNav: React.FC = () => {
   const pathname = usePathname();
   const { user } = useUserPrivileges();
@@ -95,7 +91,7 @@ const SideNav: React.FC = () => {
         <div className="relative h-[132px] w-full overflow-hidden rounded-xl bg-[linear-gradient(135deg,#53666D_0%,#36474F_48%,#263238_100%)] shadow-inner">
           {organization.bannerUrl && !bannerUnavailable && (
             <img
-              src={getOrganizationImageSrc(organization.bannerUrl)}
+              src={organization.bannerUrl}
               alt={`${organization.name} banner`}
               className="absolute inset-0 h-full w-full scale-105 object-cover blur-[3px] md:scale-100 md:blur-none"
               onError={() => setBannerUnavailable(true)}
