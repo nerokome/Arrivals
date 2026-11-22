@@ -67,12 +67,14 @@ export default function AgentAttendance({ showClockControls = false }: { showClo
   const { data: shiftResponse } = useGetAgentOfficeShiftsQuery(officeId, { skip: !officeId });
   const [submitAttendance, { isLoading: isSubmitting }] = useSubmitAgentAttendanceMutation();
   const [isScanning, setIsScanning] = useState(false);
+  const [isReadingQrImage, setIsReadingQrImage] = useState(false);
   const [isLiveTracking, setIsLiveTracking] = useState(false);
   const [workedDurationMs, setWorkedDurationMs] = useState<number | null>(null);
   const [insideOffice, setInsideOffice] = useState<boolean | null>(null);
   const [outsideDurationMs, setOutsideDurationMs] = useState<number | null>(null);
   const [outsideSince, setOutsideSince] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const qrImageInputRef = useRef<HTMLInputElement>(null);
   const scannerControlsRef = useRef<{ stop: () => void } | null>(null);
   const stopLiveTrackingRef = useRef<() => void>(() => {});
   const trackingActiveRef = useRef(false);
@@ -221,6 +223,29 @@ export default function AgentAttendance({ showClockControls = false }: { showClo
     }
   }, [attendanceIsOpen, startLiveTracking, stopLiveTracking, submitAttendance, userId]);
 
+  const handleQrImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Choose an image containing the office QR code.");
+      return;
+    }
+
+    setIsReadingQrImage(true);
+    const imageUrl = URL.createObjectURL(file);
+    try {
+      const reader = new BrowserQRCodeReader();
+      const result = await reader.decodeFromImageUrl(imageUrl);
+      await clock(result.getText());
+    } catch {
+      toast.error("Could not read a QR code from that image. Try a clearer picture.");
+    } finally {
+      URL.revokeObjectURL(imageUrl);
+      setIsReadingQrImage(false);
+    }
+  };
+
   useEffect(() => {
     if (!isScanning) return;
     let cancelled = false;
@@ -272,8 +297,10 @@ export default function AgentAttendance({ showClockControls = false }: { showClo
       {showClockControls && <section className="mt-6 mb-8 border border-[#E5E7EB] bg-white p-5">
         <h2 className="font-semibold text-[#344249]">Clock in or out</h2>
         <p className="text-sm text-[#66747A] mt-1">Scan the office QR code to clock in or out. Attendance is recorded after the scan and location check.</p>
-        <div className="mt-4 flex gap-3">
-          <button type="button" onClick={() => setIsScanning((current) => !current)} disabled={isSubmitting} className="px-5 py-3 !bg-[#36474F] text-white disabled:opacity-60">{isSubmitting ? "Recording…" : isScanning ? "Close camera" : "Scan QR"}</button>
+        <div className="mt-4 flex flex-wrap gap-3">
+          <button type="button" onClick={() => setIsScanning((current) => !current)} disabled={isSubmitting || isReadingQrImage} className="px-5 py-3 !bg-[#36474F] text-white disabled:opacity-60">{isSubmitting ? "Recording…" : isScanning ? "Close camera" : "Scan QR"}</button>
+          <button type="button" onClick={() => qrImageInputRef.current?.click()} disabled={isSubmitting || isReadingQrImage} className="px-5 py-3 border border-[#36474F] text-[#36474F] disabled:opacity-60">{isReadingQrImage ? "Reading image…" : "Upload QR image"}</button>
+          <input ref={qrImageInputRef} type="file" accept="image/*" onChange={handleQrImageUpload} className="hidden" aria-label="Upload an image of the office QR code" />
         </div>
         {isScanning && <div className="mt-4 w-full max-w-md">
           <video ref={videoRef} muted playsInline autoPlay className="w-full aspect-video bg-black object-cover" aria-label="Camera QR scanner" />

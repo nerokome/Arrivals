@@ -76,6 +76,25 @@ const AttendanceSummary = () => {
 		setResult(e.target.value);
 	};
 
+	const getWorkedHours = (record: any): string => {
+		const attendanceRecords = Array.isArray(record?.attendance)
+			? record.attendance
+			: [record];
+
+		const totalWorkedHours = attendanceRecords.reduce((total: number, attendance: any) => {
+			if (attendance?.workedHours === null || attendance?.workedHours === undefined || attendance?.workedHours === "") return total;
+			const workedHours = Number(attendance.workedHours);
+			return Number.isFinite(workedHours) ? total + workedHours : total;
+		}, 0);
+
+		const hasWorkedHours = attendanceRecords.some((attendance: any) => {
+			if (attendance?.workedHours === null || attendance?.workedHours === undefined || attendance?.workedHours === "") return false;
+			return Number.isFinite(Number(attendance.workedHours));
+		});
+
+		return hasWorkedHours ? totalWorkedHours.toFixed(2) : "—";
+	};
+
 	const handlePagination = (page: string | number) => {
 		const totalPages = pagination.pages; // Use pre-calculated pages
 		const currentPage = pagination.currentPage;
@@ -257,13 +276,7 @@ const AttendanceSummary = () => {
 										})
 										: '—';
 
-								const totalHour = clockIn && clockOut
-									? (
-										(new Date(clockOut).getTime() -
-											new Date(clockIn).getTime()) /
-										(1000 * 60 * 60)
-									).toFixed(2)
-									: '—';
+								const totalHour = getWorkedHours(record);
 
 								const employeeName = record?.name || record?.user?.name || 'N/A';
 								const employeeEmail = record?.email || record?.user?.email || '—';
