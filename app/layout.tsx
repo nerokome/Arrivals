@@ -13,8 +13,19 @@ const lato = Lato({
 export const metadata: Metadata = {
   title: "Punchly",
   description: "Attendance Management System",
+  applicationName: "Punchly",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    title: "Punchly",
+    statusBarStyle: "default",
+  },
   icons: {
-    icon: "/punchly-icon.svg",
+    icon: [
+      { url: "/punchly-icon.svg", type: "image/svg+xml" },
+      { url: "/punchly-icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
   },
 };
 
