@@ -6,6 +6,7 @@ import employeeWhite from "../public/DashboardIcon/employeeWhite.svg";
 import time from "../public/DashboardIcon/time.svg";
 import timeWhite from "../public/DashboardIcon/timeWhite.svg";
 import filedock from "../public/DashboardIcon/File_dock_light.svg";
+import filedockWhite from "../public/DashboardIcon/File_dock_white.svg";
 import dashboardWhite from "../public/DashboardIcon/dashboardWhite.svg";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
@@ -72,7 +73,7 @@ const SideNav: React.FC = () => {
     ? [
         { label: "Dashboard", icon: dashboard, iconWhite: dashboardWhite, path: "/dashboard" },
         { label: "My Attendance", icon: time, iconWhite: timeWhite, path: "/attendances" },
-        { label: "My Leave", icon: filedock, iconWhite: filedock, path: "/leave" },
+        { label: "My Leave", icon: filedock, iconWhite: filedockWhite, path: "/leave" },
         { label: "My Profile", icon: employee, iconWhite: employeeWhite, path: "/profile" },
       ]
     : [
@@ -81,7 +82,7 @@ const SideNav: React.FC = () => {
         { label: "Attendance", icon: time, iconWhite: timeWhite, path: "/attendances" },
         { label: "Summary", icon: time, iconWhite: timeWhite, path: "/attendancesummary" },
         { label: "Office Location", icon: employee, iconWhite: employeeWhite, path: "/officelocation" },
-        { label: "Leave", icon: filedock, iconWhite: filedock, path: "/leave" },
+        { label: "Leave", icon: filedock, iconWhite: filedockWhite, path: "/leave" },
         { label: "Profile", icon: employee, iconWhite: employeeWhite, path: "/profile" },
       ];
 

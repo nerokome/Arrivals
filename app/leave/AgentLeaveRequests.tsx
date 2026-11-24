@@ -8,6 +8,15 @@ import { useUserPrivileges } from "@/utils/userPrivileges";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 
+const LEAVE_TYPES = [
+  { value: "ANNUAL", label: "Annual" },
+  { value: "SICK", label: "Sick" },
+  { value: "MATERNITY", label: "Maternity" },
+  { value: "PATERNITY", label: "Paternity" },
+  { value: "COMPASSIONATE", label: "Compassionate" },
+  { value: "UNPAID", label: "Unpaid" },
+];
+
 const extractMyLeaves = (payload: any): any[] => {
   const result = payload?.data?.data?.data ?? payload?.data?.data ?? payload?.data ?? payload;
   if (Array.isArray(result)) return result;
@@ -41,7 +50,21 @@ export default function AgentLeaveRequests() {
       <PageHeader text="My Leave" />
       <form onSubmit={submit} className="mt-6 mb-8 grid grid-cols-1 md:grid-cols-2 gap-4 border border-[#E5E7EB] bg-white p-5">
         <h2 className="md:col-span-2 font-semibold text-[#344249]">Submit a leave request</h2>
-        <label className="flex flex-col gap-2 text-sm text-[#344249]">Leave type<input required value={form.leaveType} onChange={(e) => setForm({ ...form, leaveType: e.target.value.toUpperCase() })} placeholder="e.g. ANNUAL" className="border border-[#DCE2E4] p-3" /></label>
+        <label className="flex flex-col gap-2 text-sm text-[#344249]">
+          Leave type
+          <select
+            required
+            value={form.leaveType}
+            onChange={(e) => setForm({ ...form, leaveType: e.target.value })}
+            className="border border-[#DCE2E4] bg-white p-3"
+          >
+            {LEAVE_TYPES.map((leaveType) => (
+              <option key={leaveType.value} value={leaveType.value}>
+                {leaveType.label}
+              </option>
+            ))}
+          </select>
+        </label>
         <div className="grid grid-cols-2 gap-3">
           <label className="flex flex-col gap-2 text-sm text-[#344249]">Start date<input required type="date" value={form.startDate} onChange={(e) => setForm({ ...form, startDate: e.target.value })} className="border border-[#DCE2E4] p-3" /></label>
           <label className="flex flex-col gap-2 text-sm text-[#344249]">End date<input required type="date" min={form.startDate || undefined} value={form.endDate} onChange={(e) => setForm({ ...form, endDate: e.target.value })} className="border border-[#DCE2E4] p-3" /></label>
